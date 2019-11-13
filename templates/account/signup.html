@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <title>Cadastre-se</title>
+  </head>
+  <body>
+    <p>Caso já possua uma conta, faça login <a href="{{login_url}}">aqui</a></p>
+    <h2>Cadastre-se</h2>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Enviar</button>
+    </form>
+    <a href="{% url 'home' %}">
+      Home
+    </a>
+  </body>
+</html>
