@@ -7,4 +7,4 @@ from django.contrib.auth.models import AbstractUser
 class Person(AbstractUser):
 
     def __str__(self):
-        return self.email
+        return self.first_name + ' ' + self.last_name

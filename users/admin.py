@@ -10,7 +10,7 @@ class PersonAdmin(UserAdmin):
     add_form = PersonCreationForm
     form = PersonChangeForm
     model = Person
-    list_display = ['first_name', 'last_name', 'email', ]
+    list_display = ['email', 'first_name', 'last_name' ]
 
 
 admin.site.register(Person, PersonAdmin)
