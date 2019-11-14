@@ -15,18 +15,57 @@
         <hr class="my-2">
         <p>
             <h5> Aulas </h5>
-            <div class="list-group">
-                {% if lessons %}
-                    {% for lesson in lessons %}
-                        <a href="{% url 'course' id=course.id %}" class="list-group-item list-group-item-action">{{lesson}}</a>
-                    {% endfor %}
-                {% endif %}
+            <div id="accordion">
+                {% for lesson in lessons %}
+                    <div class = "card bg-light mb-3">
+                        <div class="card-header" id="heading-{{lesson.id}}">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{lesson.id}}" aria-expanded="false" aria-controls="collapse-{{lesson.id}}">
+                                {{lesson}}
+                                </button>
+                            </h5>
+                            </div>
+
+                            <div id="collapse-{{lesson.id}}" class="collapse" aria-labelledby="heading-{{lesson.id}}" data-parent="#accordion">
+                            <div class="card-body">
+                                {% if is_owner %}
+                                    <p>Chave de check-in: {{lesson.auth_code}}</p>
+                                {% endif %}
+                                <div class="list-group">
+                                    {% if lesson.participants.all %}
+                                        {% for participant in lesson.participants.all %}
+                                            <li class="list-group-item">{{participant}}</li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li class="list-group-item">Nenhum aluno fez check-in ainda!</li>
+                                    {% endif %}
+                                    {% if is_owner %}
+                                        {% if lesson.on_going %}
+                                        <li class = "list-group-item">
+                                            <a class="btn btn-danger" href="{% url 'close_lesson' id=lesson.id %}" role="button">Encerrar Aula</a>
+                                            <a class="btn btn-danger" href="#" role="button">Deletar Aula</a>
+                                        </li>
+                                        {% else %}
+                                            <li class = "list-group-item">
+                                                <a class="btn btn-primary" href="{% url 'open_lesson' id=lesson.id %}" role="button">Abrir Aula</a>
+                                                <a class="btn btn-danger" href="#" role="button">Deletar Aula</a>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                {% endfor %}
             </div>
         </p>
         {% if is_owner %}
         <p class="lead">
             <a class="btn btn-primary btn-lg" href="#" role="button">Gerar Relatório</a>
-            <a class="btn btn-primary btn-lg" href="#" role="button">Adicionar Aula</a>
+            <a class="btn btn-primary btn-lg" href="{% url 'new_lesson' course_id=course.id %}" role="button">Adicionar Aula</a>
         </p>
         {% else %}
         <p class="lead">

@@ -20,7 +20,7 @@ class Course(models.Model):
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     on_going = models.BooleanField(default=True)
-    date = models.DateField(auto_now=True)
+    date = models.DateField(auto_now_add=True)
     attendants = models.ManyToManyField(
         Person, related_name="attendants", blank=True)
     auth_code = models.CharField(max_length=6)
