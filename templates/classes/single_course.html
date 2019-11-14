@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head_block %}
+    <title> {{course.name}} </title>
+{% endblock %}
+
+{% block body_block %}
+<br>
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-3">{{course.name}}</h1>
+        <p class="lead">{{course.owner}}</p>
+        
+        <p>{{course.description}}</p>
+        <hr class="my-2">
+        <p>
+            <h5> Aulas </h5>
+            <div class="list-group">
+                {% if lessons %}
+                    {% for lesson in lessons %}
+                        <a href="{% url 'course' id=course.id %}" class="list-group-item list-group-item-action">{{lesson}}</a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </p>
+        {% if is_owner %}
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="#" role="button">Gerar Relatório</a>
+            <a class="btn btn-primary btn-lg" href="#" role="button">Adicionar Aula</a>
+        </p>
+        {% else %}
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="#" role="button">Inscreva-se</a>
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

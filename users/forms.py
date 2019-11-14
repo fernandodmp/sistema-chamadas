@@ -8,6 +8,7 @@ class PersonCreationForm(UserCreationForm):
     class Meta:
         model = Person
         fields = ('first_name', 'last_name', 'email')
+        exclude = ()
 
 
 class PersonChangeForm(UserChangeForm):
