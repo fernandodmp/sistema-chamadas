@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block head_block %}
+    <title> Cursos </title>
+{% endblock %}
+
+{% block body_block %}
+<br>
+<h2 class = "text-center"> Todos os Cursos</h2>
+<br>
+<div class="container">
+    <div class="list-group">
+        {% if courses %}
+            {% for course in courses %}
+                <a href="#" class="list-group-item list-group-item-action">{{course.name}}</a>
+            {% endfor %}
+        {% else %}
+            <a href="#" class="list-group-item list-group-item-action">Adicione um Curso</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

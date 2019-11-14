@@ -1,16 +1,21 @@
-<html>
-  <head>
+<!--TODO: Estilizar-->
+{% extends 'base.html' %}
+
+    {% block head_block %}
     <title>Cadastre-se</title>
-  </head>
-  <body>
-    <p>Caso já possua uma conta, faça login <a href="{{login_url}}">aqui</a></p>
-    <h2>Cadastre-se</h2>
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit">Enviar</button>
-    </form>
-    <a href="{% url 'home' %}">
-      Home
-    </a>
-  </body>
-</html>
+    {% endblock %}
+    
+    {% block body_block %}
+      <div class="container">
+      <br>
+        <h2 class = " text-center" >Cadastre-se</h2>
+        <form method="post">
+          {% csrf_token %} {{ form.as_p }}
+          <button type="submit" class= "btn btn-primary">Enviar</button>
+        </form>
+        
+        <a href="{{login_url}}">
+          Login
+        </a> 
+      </div>
+    {% endblock %}
