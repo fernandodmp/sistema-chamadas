@@ -14,8 +14,11 @@ from django.contrib.auth.decorators import login_required
 # [X] Fechamento/Abertura de Aulas pelo dono do curso
 # [X] Inscrição de alunos em cursos
 # [X] Registro de Presença de alunos
-# [] Geração de relatório de presença do curso
-# Seção Meus Cursos:
+# [] Remoção de aulas pelo dono do curso
+# [] Geração de relatório de presença do curso para o dono
+# [] Geração de relatório de presença dos cursos para os alunos
+
+#  Seção Meus Cursos:
 # [] Listagem de Curso dos quais o usuário é proprietário
 # [] Listagem de Curso dos quais o usuário é participante
 # [] Criação/Remoção de Cursos na visão do usuário logado
@@ -125,3 +128,25 @@ def lesson_check_in(request, lesson_id):
             else:
                 # FIXME: Temporário
                 return render(request, 'errors/unauthorized.html', status=400)
+
+@login_required
+def course_report(request, id):
+    # FIXME: Incompleto
+    course = get_object_or_404(models.Course, pk=id)
+    if request.user == course.owner:
+        participants = course.participants.all()
+        lessons = course.lesson_set.all()
+        report = {}
+        for participant in participants:
+            report[participant.email] = []
+            for lesson in lessons:
+                pair = None
+                if participant in lesson.attendants:
+                    pair = (str(lesson), 1)
+                else:
+                    pair = (str(lesson), 0)
+                report[participant.email].append(pair)
+        return render(request, 'classes/course_report.html', context = report)
+    else:
+        return render(request, 'errors/unauthorized.html', status=401)
+    
