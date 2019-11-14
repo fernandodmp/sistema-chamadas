@@ -11,7 +11,7 @@ class Course(models.Model):
     owner = models.ForeignKey(Person, on_delete=models.CASCADE)
     participants = models.ManyToManyField(
         Person, related_name="participants", blank=True)
-    password = models.CharField(max_length = 12, blank = True)
+    access_key = models.CharField(max_length = 12, blank = True)
 
     def __str__(self):
         return self.name

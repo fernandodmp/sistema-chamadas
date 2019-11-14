@@ -10,7 +10,8 @@
       <br>
         <h2 class = " text-center" >Cadastre-se</h2>
         <form method="post">
-          {% csrf_token %} {{ form.as_p }}
+          {% csrf_token %} 
+          {{ form.as_p }}
           <button type="submit" class= "btn btn-primary">Enviar</button>
         </form>
         

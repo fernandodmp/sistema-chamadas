@@ -6,5 +6,8 @@ urlpatterns = [
     path('<int:id>', views.course_page, name='course'),
     path('<int:course_id>/new_lesson', views.add_lesson, name='new_lesson'),
     path('lessons/<int:id>/close', views.close_lesson, name='close_lesson'),
-    path('lessons/<int:id>/open', views.open_lesson, name='open_lesson')
+    path('lessons/<int:id>/open', views.open_lesson, name='open_lesson'),
+    path('<int:course_id>/subscribe',
+         views.subscribe_on_course, name='subscribe_course'),
+    path('lessons/<int:lesson_id>/check_in', views.lesson_check_in, name='check_in_lesson'),
 ]

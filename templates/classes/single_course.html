@@ -13,6 +13,7 @@
         
         <p>{{course.description}}</p>
         <hr class="my-2">
+        {% if user in course.participants.all or is_owner %}
         <p>
             <h5> Aulas </h5>
             <div id="accordion">
@@ -32,9 +33,9 @@
                                     <p>Chave de check-in: {{lesson.auth_code}}</p>
                                 {% endif %}
                                 <div class="list-group">
-                                    {% if lesson.participants.all %}
-                                        {% for participant in lesson.participants.all %}
-                                            <li class="list-group-item">{{participant}}</li>
+                                    {% if lesson.attendants.all %}
+                                        {% for attendant in lesson.attendants.all %}
+                                            <li class="list-group-item">{{attendant}}</li>
                                         {% endfor %}
                                     {% else %}
                                         <li class="list-group-item">Nenhum aluno fez check-in ainda!</li>
@@ -52,7 +53,18 @@
                                             </li>
                                         {% endif %}
                                     {% else %}
-
+                                        {% if lesson.on_going %}
+                                        <br>
+                                        <form method="POST" class="form-inline" action="{% url 'check_in_lesson' lesson_id=lesson.id %}">
+                                            <p>
+                                            {% csrf_token %}
+                                            {{ check_in.auth_code }}
+                                            <button type="submit" class= "btn btn-primary"> Check In! </button>
+                                            </p>
+                                        </form>
+                                        {% else %}
+                                        <li class="list-group-item list-group-item-danger">Aula Encerrada</li>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                             </div>
@@ -62,14 +74,25 @@
                 {% endfor %}
             </div>
         </p>
+        {% endif %}
         {% if is_owner %}
         <p class="lead">
             <a class="btn btn-primary btn-lg" href="#" role="button">Gerar Relatório</a>
             <a class="btn btn-primary btn-lg" href="{% url 'new_lesson' course_id=course.id %}" role="button">Adicionar Aula</a>
         </p>
+        {% elif user not in course.participants.all %}
+        <p class="lead">
+            <form method="POST" class="form-inline" action="{% url 'subscribe_course' course_id=course.id %}">
+                <p>
+                {% csrf_token %}
+                {{ subscribe.course_key }}
+                <button type="submit" class= "btn btn-primary"> Inscreva-se </button>
+                </p>
+            </form>
+        </p>
         {% else %}
         <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button">Inscreva-se</a>
+            <a class="btn btn-primary btn-lg" href="#" role="button">Gerar Relatório</a>
         </p>
         {% endif %}
     </div>
