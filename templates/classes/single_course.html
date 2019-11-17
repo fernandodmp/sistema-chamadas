@@ -29,7 +29,7 @@
 
                             <div id="collapse-{{lesson.id}}" class="collapse" aria-labelledby="heading-{{lesson.id}}" data-parent="#accordion">
                             <div class="card-body">
-                                {% if is_owner %}
+                                {% if is_owner and lesson.on_going %}
                                     <p>Chave de check-in: {{lesson.auth_code}}</p>
                                 {% endif %}
                                 <div class="list-group">
@@ -90,10 +90,6 @@
                 <button type="submit" class= "btn btn-primary"> Inscreva-se </button>
                 </p>
             </form>
-        </p>
-        {% else %}
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button">Gerar Relatório</a>
         </p>
         {% endif %}
     </div>

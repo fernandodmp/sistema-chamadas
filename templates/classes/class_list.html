@@ -13,10 +13,13 @@
         {% if courses %}
             {% for course in courses %}
                 <a href="{% url 'course' id=course.id%}" class="list-group-item list-group-item-action">{{course.name}}</a>
-            {% endfor %}
-        {% else %}
-            <a href="#" class="list-group-item list-group-item-action">Adicione um Curso</a>
+            {% endfor %}           
         {% endif %}
+        <br>
+        <div class="container text-center">
+            <a class="btn btn-primary btn-lg" href="{% url 'create_course' %}" role="button">Adicione um Curso</a>
+        </div>
+        
     </div>
 </div>
 {% endblock %}

@@ -16,7 +16,6 @@ from django.contrib.auth.decorators import login_required
 # [X] Registro de Presença de alunos
 # [X] Remoção de aulas pelo dono do curso
 # [X] Geração de relatório de presença do curso para o dono
-# [] Geração de relatório de presença dos cursos para os alunos
 
 #  Seção Meus Cursos:
 # [] Listagem de Curso dos quais o usuário é proprietário
@@ -151,3 +150,15 @@ def course_report(request, id):
         return render(request, 'errors/unauthorized.html', status=401)
 
 
+@login_required
+def new_course(request):
+    if request.method == "POST":
+        form = forms.CourseCreation(request.POST)
+        if(form.is_valid()):
+            course = form.save(commit=False)
+            course.owner = request.user
+            course.save()
+            return redirect('course', id=course.id)
+    else:
+        form = forms.CourseCreation()
+        return render(request, 'classes/create_course.html', context={'form':form})
