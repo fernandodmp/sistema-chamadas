@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head_block %}
+<title>Relatório de {{course.name}} </title>
+{% endblock %}
+
+{% block body_block %}
+<br>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th> Aluno </th>
+            {% for lesson in lessons %}
+            <th> {{lesson}} </th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for participant in participants %}
+        <tr>
+            <td>{{participant}}</td>
+            {% for lesson in lessons %}
+                {% if participant in lesson.attendants.all %}
+                    <td> 1 </td>
+                {% else %}
+                    <td> 0 </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

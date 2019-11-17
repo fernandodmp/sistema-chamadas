@@ -14,8 +14,8 @@ from django.contrib.auth.decorators import login_required
 # [X] Fechamento/Abertura de Aulas pelo dono do curso
 # [X] Inscrição de alunos em cursos
 # [X] Registro de Presença de alunos
-# [] Remoção de aulas pelo dono do curso
-# [] Geração de relatório de presença do curso para o dono
+# [X] Remoção de aulas pelo dono do curso
+# [X] Geração de relatório de presença do curso para o dono
 # [] Geração de relatório de presença dos cursos para os alunos
 
 #  Seção Meus Cursos:
@@ -91,6 +91,15 @@ def open_lesson(request, id):
     else:
         return render(request, 'errors/unauthorized.html', status=401)
 
+@login_required
+def remove_lesson(request, id):
+    lesson = get_object_or_404(models.Lesson, pk=id)
+    if request.user == lesson.course.owner:
+        lesson.delete()
+        return redirect('course', id=lesson.course.id)
+    else:
+        return render(request, 'errors/unauthorized.html', status=401)
+
 
 @login_required
 def subscribe_on_course(request, course_id):
@@ -136,17 +145,9 @@ def course_report(request, id):
     if request.user == course.owner:
         participants = course.participants.all()
         lessons = course.lesson_set.all()
-        report = {}
-        for participant in participants:
-            report[participant.email] = []
-            for lesson in lessons:
-                pair = None
-                if participant in lesson.attendants:
-                    pair = (str(lesson), 1)
-                else:
-                    pair = (str(lesson), 0)
-                report[participant.email].append(pair)
-        return render(request, 'classes/course_report.html', context = report)
+        ctx = {'participants': participants, 'lessons': lessons, 'course':course}
+        return render(request, 'classes/course_report.html', context = ctx)
     else:
         return render(request, 'errors/unauthorized.html', status=401)
-    
+
+

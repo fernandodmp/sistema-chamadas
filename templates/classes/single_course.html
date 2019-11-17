@@ -41,27 +41,28 @@
                                         <li class="list-group-item">Nenhum aluno fez check-in ainda!</li>
                                     {% endif %}
                                     {% if is_owner %}
-                                        {% if lesson.on_going %}
                                         <li class = "list-group-item">
+                                        {% if lesson.on_going %}
                                             <a class="btn btn-danger" href="{% url 'close_lesson' id=lesson.id %}" role="button">Encerrar Aula</a>
-                                            <a class="btn btn-danger" href="#" role="button">Deletar Aula</a>
-                                        </li>
                                         {% else %}
-                                            <li class = "list-group-item">
-                                                <a class="btn btn-primary" href="{% url 'open_lesson' id=lesson.id %}" role="button">Abrir Aula</a>
-                                                <a class="btn btn-danger" href="#" role="button">Deletar Aula</a>
-                                            </li>
+                                            <a class="btn btn-primary" href="{% url 'open_lesson' id=lesson.id %}" role="button">Abrir Aula</a>
                                         {% endif %}
+                                        <a class="btn btn-danger" href="{% url 'remove_lesson' id=lesson.id %}" role="button">Deletar Aula</a>
+                                        </li>
                                     {% else %}
                                         {% if lesson.on_going %}
-                                        <br>
-                                        <form method="POST" class="form-inline" action="{% url 'check_in_lesson' lesson_id=lesson.id %}">
-                                            <p>
-                                            {% csrf_token %}
-                                            {{ check_in.auth_code }}
-                                            <button type="submit" class= "btn btn-primary"> Check In! </button>
-                                            </p>
-                                        </form>
+                                            {% if user in lesson.attendants.all %}
+                                            <li class="list-group-item list-group-item-success">Check-in realizado</li>
+                                            {% else %}
+                                            <br>
+                                            <form method="POST" class="form-inline" action="{% url 'check_in_lesson' lesson_id=lesson.id %}">
+                                                <p>
+                                                {% csrf_token %}
+                                                {{ check_in.auth_code }}
+                                                <button type="submit" class= "btn btn-primary"> Check In! </button>
+                                                </p>
+                                            </form>
+                                            {% endif %}
                                         {% else %}
                                         <li class="list-group-item list-group-item-danger">Aula Encerrada</li>
                                         {% endif %}
@@ -77,7 +78,7 @@
         {% endif %}
         {% if is_owner %}
         <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button">Gerar Relatório</a>
+            <a class="btn btn-primary btn-lg" href="{% url 'course_report' id=course.id %}" role="button">Gerar Relatório</a>
             <a class="btn btn-primary btn-lg" href="{% url 'new_lesson' course_id=course.id %}" role="button">Adicionar Aula</a>
         </p>
         {% elif user not in course.participants.all %}
