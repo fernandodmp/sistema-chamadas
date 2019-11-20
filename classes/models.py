@@ -8,7 +8,7 @@ from datetime import date
 class Course(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=300, blank=True)
-    owner = models.ForeignKey(Person, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Person, related_name="owner", on_delete=models.CASCADE)
     participants = models.ManyToManyField(
         Person, related_name="participants", blank=True)
     access_key = models.CharField(max_length = 12, blank = True)

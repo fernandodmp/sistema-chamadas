@@ -139,3 +139,26 @@ def new_course(request):
     else:
         form = forms.CourseCreation()
         return render(request, 'classes/create_course.html', context={'form':form})
+
+@login_required
+def my_courses(request):
+    owned_courses = request.user.owner.all()
+    subscribed_courses = request.user.participants.all()
+    ctx = {"owned": owned_courses, "subscribed": subscribed_courses}
+    return render(request, 'classes/my_courses.html', context=ctx)
+
+
+@login_required
+def delete_course(request, id):
+    course = get_object_or_404(models.Course, pk=id)
+    if request.user == course.owner:
+        course.delete()
+        return redirect('my_courses')
+    else:
+        return render(request, 'errors/unauthorized.html', status=401)
+
+@login_required
+def unsubscribe(request, id):
+    course = get_object_or_404(models.Course, pk=id)
+    course.participants.remove(request.user)
+    return redirect('my_courses')
