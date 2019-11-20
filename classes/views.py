@@ -6,23 +6,6 @@ import random
 import string
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-# TODO:
-# [X] Visualização dos Cursos
-# [X] Listagem de Curso na visão de todos
-# [X] Criação de Aulas pelo dono do curso
-# [X] Fechamento/Abertura de Aulas pelo dono do curso
-# [X] Inscrição de alunos em cursos
-# [X] Registro de Presença de alunos
-# [X] Remoção de aulas pelo dono do curso
-# [X] Geração de relatório de presença do curso para o dono
-
-#  Seção Meus Cursos:
-# [] Listagem de Curso dos quais o usuário é proprietário
-# [] Listagem de Curso dos quais o usuário é participante
-# [] Criação/Remoção de Cursos na visão do usuário logado
-
-
 def list_courses(request):
     return render(request, 'classes/class_list.html', context={"courses": models.Course.objects.all()})
 
@@ -104,8 +87,7 @@ def remove_lesson(request, id):
 def subscribe_on_course(request, course_id):
     course = get_object_or_404(models.Course, pk=course_id)
     if request.user in course.participants.all():
-        # FIXME: Temporário
-        return render(request, 'errors/unauthorized.html', status=400)
+        return render(request, 'errors/already_in.html', status=400)
     if request.method == "POST":
         form = forms.SubscribeForm(request.POST)
         if(form.is_valid()):
@@ -114,18 +96,15 @@ def subscribe_on_course(request, course_id):
                 course.participants.add(request.user)
                 return redirect('course', id=course.id)
             else:
-                # FIXME: Temporário
-                return render(request, 'errors/unauthorized.html', status=400)
+                return render(request, 'errors/wrong_key.html', status=400)
 
 @login_required
 def lesson_check_in(request, lesson_id):
     lesson = get_object_or_404(models.Lesson, pk=lesson_id)
     if request.user in lesson.attendants.all():
-        # FIXME: Temporário
-        return render(request, 'errors/unauthorized.html', status=400)
+        return render(request, 'errors/already_in.html', status=400)
     if not lesson.on_going:
-        # FIXME: Temporário
-        return render(request, 'errors/unauthorized.html', status=400)
+        return render(request, 'errors/closed_lesson.html', status=400)
     if request.method == "POST":
         form = forms.CheckInForm(request.POST)
         if(form.is_valid()):
@@ -134,12 +113,10 @@ def lesson_check_in(request, lesson_id):
                 lesson.attendants.add(request.user)
                 return redirect('course', id=lesson.course.id)
             else:
-                # FIXME: Temporário
-                return render(request, 'errors/unauthorized.html', status=400)
+                return render(request, 'errors/wrong_key.html', status=400)
 
 @login_required
 def course_report(request, id):
-    # FIXME: Incompleto
     course = get_object_or_404(models.Course, pk=id)
     if request.user == course.owner:
         participants = course.participants.all()
